@@ -1,0 +1,67 @@
+def privet():
+    print("                 Игра крестики нолики.                     ")
+    print("    Побеждает тот кто быстрее укажит три знака в линию.    ")
+    print("Линии могут быть ветикальные, горизантальные и диоганальные")
+    print("          Приятной игры, и пусть победит умнейший          ")
+    print("--------------------СТАРТ----ИГРЫ--------------------------")
+
+def show_pole(f): # функция поля
+    print('   0   1   2 ')
+    for i in range(len(pole)):
+        print(str(i) + '  ' + ' | '.join(pole[i]))
+        print('  -----------')
+
+
+def xod(f): # функция хода
+    while True:
+        mecto = input('Ведите номер строки по горизонтали и вертикали: ').split()
+        if len(mecto) != 2:
+            print('Необходимо ввести номер строки по горизонтали и вертикали, через пробел (ЧИСЛО ОТ 0 ДО 2)')
+            continue
+        if not(mecto[0].isdigit() and mecto[1].isdigit()):
+            print('Необходимо ввести номера строк (ЧИСЛО ОТ 0 ДО 2)')
+            continue
+        x, y = map(int, mecto)
+        if not(x >= 0 and x < 3 and y >= 0 and y < 3):
+            print('Ведены не верные номера строк (ЧИСЛО ОТ 0 ДО 2)')
+            continue
+        if f[x][y] != ' ':
+            print('Ход не возможен, место используется. Попробуйте указать другие координаты')
+            continue
+        break
+    return x, y
+
+
+def pobeda_X(p, user):
+    def proverka(a1, a2, a3, user):
+        if a1 == user and a2 == user and a3 == user:
+            return True
+    for n in range(3):
+        if proverka(p[n][0], p[n][1], p[n][2], user) or \
+                proverka(p[0][n], p[1][n], p[2][n], user) or \
+                proverka(p[0][0], p[1][1], p[2][2], user) or \
+                proverka(p[2][0], p[1][1], p[0][2], user):
+            return True
+        return False
+
+privet()
+pole = [[" "] * 3 for _ in range(3)]
+count = 0
+while True:
+    if count == 9:
+        print('Победителя нет')
+        break
+    if count % 2 == 0:
+        user = 'X'
+        print("ХОД Х")
+    else:
+        user = '0'
+        print("ХОД 0")
+    show_pole(pole)
+    x, y = xod(pole)
+    pole[x][y] = user
+    if pobeda_X(pole, user):
+        print(f" Победил {user}")
+        show_pole(pole)
+        break
+    count+=1
